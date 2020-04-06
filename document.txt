@@ -1,0 +1,24 @@
+@ControllerAdvice注解  三个作用
+1. 全局异常处理
+    类上添加@ControllerAdvice注解
+    定义方法: 返回值任意,方法名任意
+             在方法上添加@ExceptionHandler(Exception.class)  //Exception.class可以是一个具体的异常.class
+    返回数据:
+             通过response获取流写到页面
+             直接返回一个页面(ModelAndView) 使用thymeleaf或者freemarker模板
+2. 预设全局数据
+    在任意controller中都可以获取此数据
+    类上添加@ControllerAdvice注解
+    定义方法 返回值(需要的数据) 方法名任意
+             在方法上添加@ModelAttribute(value = "globalInfo")注解,value值是在controller中获取数据的key
+                具体:controller中的方法上添加Model参数,model转换为map,map.get(key)即可得到预先设置的数据
+3. 请求参数预处理
+    在controller中接收参数的时候,两个对象接值,这两个对象中都有相同的属性,那么获取到的值就会出现问题
+    使用@ControlllerAdvice的第三个作用可以设置
+        1.在接收参数的对象前加上@ModelAttribute("别名"),相当于给对象起了个别名
+        2.新增类,在类上添加@ControllerAdvice注解,定义方法
+        @InitBinder("a")
+        public void initA(WebDataBinder binder){
+            // 添加前缀 注意 . 不能少
+            binder.setFieldDefaultPrefix("a.");
+        }
